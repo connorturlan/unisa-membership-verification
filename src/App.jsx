@@ -73,7 +73,7 @@ function App() {
 				<input type="submit" value="submit" />
 				{isSubmitted && ((isAccepted && <Accepted />) || <Rejected />)}
 				<h3>
-					<a>privacy</a>
+					<a href="https://www.google.com">privacy</a>
 				</h3>
 			</form>
 		</div>
