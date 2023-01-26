@@ -4,30 +4,30 @@ import { useEffect, useState } from "react";
 function ValidationMark({ mark, colour }) {
 	const [colourIndex, setColourIndex] = useState(0);
 
-	const colourList = [
-		"green",
-		"yellow",
-		"orange",
-		"red",
-		"purple",
-		"blue",
-		"lightblue",
-	];
+	const colourList = ["white", "green", "blue", "#eee"];
 
-	const style = { backgroundColor: colour || colourList[colourIndex] };
+	const style = {
+		backgroundColor: colour || colourList[colourIndex],
+	};
 
 	const changeColour = () => {
 		setColourIndex((colourIndex + 1) % colourList.length);
 	};
 
 	return (
-		<div
+		<h1
 			style={style}
 			className={styles.ValidationMark}
 			onClick={changeColour}
 		>
-			<h1>{mark}</h1>
-		</div>
+			{(colourIndex == colourList.length - 1 && (
+				<img
+					class={styles.image}
+					src="https://d30mzt1bxg5llt.cloudfront.net/public/uploads/images/_signatoryLogo/university-south-australia.png"
+				/>
+			)) ||
+				mark}
+		</h1>
 	);
 }
 
