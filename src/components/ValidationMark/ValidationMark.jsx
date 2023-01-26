@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 function ValidationMark({ mark, colour }) {
 	const [colourIndex, setColourIndex] = useState(0);
 
-	const colourList = ["white", "green", "blue", "#eee"];
+	const colourList = ["green", "blue", "white"];
 
 	const style = {
 		backgroundColor: colour || colourList[colourIndex],
