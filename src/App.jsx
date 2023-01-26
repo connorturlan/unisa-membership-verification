@@ -1,8 +1,8 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import style from "./App.module.scss";
-import Accepted from "./components/Accepted/Accepted";
-import Rejected from "./components/Rejected/Rejected";
+import Accepted from "./components/Accepted/Accepted.jsx";
+import Rejected from "./components/Rejected/Rejected.jsx";
 
 const sha256 = async (s) => {
 	// same as: py -c "from hashlib import sha256; print(sha256(bytes('', 'utf8')).hexdigest())"
