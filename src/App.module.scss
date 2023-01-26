@@ -56,9 +56,16 @@
 	margin: 2em;
 	padding: 2em;
 	border-radius: 20px;
-	background-color: #eee;
+	background-color: #e0e0e0;
 	flex-direction: column;
 	color: #222;
 	width: min(100vw, 400px);
 	gap: 1em;
+
+	box-shadow: 20px 20px 40px #b1b1b1, -20px -20px 40px #ffffff;
+}
+
+.input {
+	padding: 5px;
+	border-radius: 10px;
 }

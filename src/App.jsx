@@ -1,6 +1,6 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
-import style from "./App.module.scss";
+import styles from "./App.module.scss";
 import Accepted from "./components/Accepted/Accepted.jsx";
 import Rejected from "./components/Rejected/Rejected.jsx";
 
@@ -48,8 +48,8 @@ function App() {
 	};
 
 	return (
-		<div className={style.App}>
-			<form className={style.entry} onSubmit={submitForm}>
+		<div className={styles.App}>
+			<form className={styles.entry} onSubmit={submitForm}>
 				<h1>UniSA Volleyball Club</h1>
 				<h2>
 					Please enter the following details to verify your
@@ -59,18 +59,26 @@ function App() {
 					<b>Notice</b>: Do not refresh this page.
 				</h2>
 				<input
+					className={styles.input}
 					type="text"
 					name="name"
 					id="name"
 					placeholder="Full Name"
 				/>
 				<input
+					className={styles.input}
 					type="email"
 					name="email"
 					id="email"
 					placeholder="Email Address"
 				/>
-				{!isSubmitted && <input type="submit" value="submit" />}
+				{!isSubmitted && (
+					<input
+						className={styles.input}
+						type="submit"
+						value="submit"
+					/>
+				)}
 				{isSubmitted && ((isAccepted && <Accepted />) || <Rejected />)}
 				<h3>
 					<a href="https://www.google.com">privacy</a>
