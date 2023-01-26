@@ -16,8 +16,6 @@ const sha256 = async (s) => {
 };
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	const [isSubmitted, setSubmitted] = useState(false);
 	const [isAccepted, setAccepted] = useState(false);
 
