@@ -1,4 +1,4 @@
-import ValidationMark from "../ValidationMark/ValidationMark";
+import ValidationMark from "../ValidationMark/ValidationMark.jsx";
 import styles from "./Rejected.module.scss";
 
 function Rejected(props) {
