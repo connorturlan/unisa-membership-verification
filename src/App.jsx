@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import styles from "./App.module.scss";
 import Accepted from "./components/Accepted/Accepted.jsx";
 import Rejected from "./components/Rejected/Rejected.jsx";
+import { setCookie, getCookie } from "./utils/cookies";
 
 const sha256 = async (s) => {
 	// same as: py -c "from hashlib import sha256; print(sha256(bytes('', 'utf8')).hexdigest())"
@@ -19,6 +20,8 @@ function App() {
 	const [isSubmitted, setSubmitted] = useState(false);
 	const [isAccepted, setAccepted] = useState(false);
 
+	const [submittedEmail, setSubmittedEmail] = useState("");
+
 	const pollDatabase = async (prehash) => {
 		const hash = await sha256(prehash);
 
@@ -33,8 +36,15 @@ function App() {
 		);
 		const json = await res.json();
 
-		setAccepted(json.isValid);
+		setAccepted(res.status === 200);
 		setSubmitted(true);
+
+		// if accepted, give the user a cookie so they can safely refresh the page.
+		if (res.status === 200) {
+			const cookie = prehash.toUpperCase();
+			setCookie("accepted", cookie, 1);
+			setSubmittedEmail(cookie);
+		}
 	};
 
 	const submitForm = (e) => {
@@ -47,40 +57,56 @@ function App() {
 		pollDatabase(prehash);
 	};
 
+	useEffect(() => {
+		const cookie = getCookie("accepted");
+		if (cookie !== "") {
+			setAccepted(true);
+			setSubmitted(true);
+		}
+
+		setSubmittedEmail(cookie);
+	}, []);
+
 	return (
 		<div className={styles.App}>
 			<form className={styles.entry} onSubmit={submitForm}>
 				<h1>UniSA Volleyball Club</h1>
-				<h2>
-					Please enter the following details to verify your
-					membership.
-				</h2>
-				<h2>
+				{/* <h2>
 					<b>Notice</b>: Do not refresh this page.
-				</h2>
-				<input
+				</h2> */}
+				{/* <input
 					className={styles.input}
 					type="text"
 					name="name"
 					id="name"
 					placeholder="Full Name"
-					hidden
-				/>
-				<input
-					className={styles.input}
-					type="email"
-					name="email"
-					id="email"
-					placeholder="Email Address"
-				/>
-				{!isSubmitted && (
-					<input
-						className={styles.input}
-						type="submit"
-						value="submit"
-					/>
+				/> */}
+				{!isAccepted && (
+					<>
+						<h2>
+							Please enter the following details to verify your
+							membership.
+						</h2>
+						<input
+							className={styles.input}
+							type="email"
+							name="email"
+							id="email"
+							placeholder="Email Address"
+						/>
+						<input
+							className={styles.input}
+							type="submit"
+							value="submit"
+						/>
+					</>
 				)}
 				{isSubmitted && ((isAccepted && <Accepted />) || <Rejected />)}
+				{isSubmitted && isAccepted && (
+					<p className={styles.submittedEmail}>
+						<b>{submittedEmail}</b>
+					</p>
+				)}
 				<h3>
 					<a href="https://www.google.com">privacy</a>
 				</h3>
