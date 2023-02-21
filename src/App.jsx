@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import styles from "./App.module.scss";
 import Accepted from "./components/Accepted/Accepted.jsx";
 import Rejected from "./components/Rejected/Rejected.jsx";
+import { setCookie, getCookie } from "./utils/cookies";
 
 const sha256 = async (s) => {
 	// same as: py -c "from hashlib import sha256; print(sha256(bytes('', 'utf8')).hexdigest())"
@@ -33,8 +34,13 @@ function App() {
 		);
 		const json = await res.json();
 
-		setAccepted(json.isValid);
+		setAccepted(res.status === 200);
 		setSubmitted(true);
+
+		// if accepted, give the user a cookie so they can safely refresh the page.
+		if (res.status === 200) {
+			setCookie("accepted", "true", 1);
+		}
 	};
 
 	const submitForm = (e) => {
@@ -46,6 +52,14 @@ function App() {
 		const prehash = (name + email).toLowerCase().replace(/\s/g, "");
 		pollDatabase(prehash);
 	};
+
+	useEffect(() => {
+		const cookie = getCookie("accepted");
+		if (cookie !== "") {
+			setAccepted(true);
+			setSubmitted(true);
+		}
+	}, []);
 
 	return (
 		<div className={styles.App}>
