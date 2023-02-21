@@ -1,7 +1,7 @@
 import styles from "./ValidationMark.module.scss";
 import { useEffect, useState } from "react";
 
-function ValidationMark({ mark, colour }) {
+function ValidationMark({ mark, colour, enabled }) {
 	const [colourIndex, setColourIndex] = useState(0);
 
 	const colourList = ["green", "blue", "white"];
@@ -11,6 +11,8 @@ function ValidationMark({ mark, colour }) {
 	};
 
 	const changeColour = () => {
+		if (!enabled) return;
+
 		setColourIndex((colourIndex + 1) % colourList.length);
 	};
 

@@ -22,7 +22,7 @@ function App() {
 	const pollDatabase = async (prehash) => {
 		const hash = await sha256(prehash);
 
-		console.log(hash);
+		// console.log("polling: ", hash);
 
 		const res = await fetch(
 			"https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
@@ -40,7 +40,7 @@ function App() {
 	const submitForm = (e) => {
 		e.preventDefault();
 
-		const name = e.target.name.value;
+		const name = ""; //e.target.name.value;
 		const email = e.target.email.value;
 
 		const prehash = (name + email).toLowerCase().replace(/\s/g, "");
@@ -64,6 +64,7 @@ function App() {
 					name="name"
 					id="name"
 					placeholder="Full Name"
+					hidden
 				/>
 				<input
 					className={styles.input}
