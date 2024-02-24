@@ -2,35 +2,28 @@ import styles from "./ValidationMark.module.scss";
 import { useEffect, useState } from "react";
 
 function ValidationMark({ mark, colour, enabled }) {
-	const [colourIndex, setColourIndex] = useState(0);
+  const [colourIndex, setColourIndex] = useState(0);
 
-	const colourList = ["green", "blue", "white"];
+  const colourList = ["green", "blue", "white"];
 
-	const style = {
-		backgroundColor: colour || colourList[colourIndex],
-	};
+  const style = {
+    backgroundColor: colour || colourList[colourIndex],
+  };
 
-	const changeColour = () => {
-		if (!enabled) return;
+  const changeColour = () => {
+    if (!enabled) return;
 
-		setColourIndex((colourIndex + 1) % colourList.length);
-	};
+    setColourIndex((colourIndex + 1) % colourList.length);
+  };
 
-	return (
-		<h1
-			style={style}
-			className={styles.ValidationMark}
-			onClick={changeColour}
-		>
-			{(colourIndex == colourList.length - 1 && (
-				<img
-					class={styles.image}
-					src="https://d30mzt1bxg5llt.cloudfront.net/public/uploads/images/_signatoryLogo/university-south-australia.png"
-				/>
-			)) ||
-				mark}
-		</h1>
-	);
+  return (
+    <h1 style={style} className={styles.ValidationMark} onClick={changeColour}>
+      {(colourIndex == colourList.length - 1 && (
+        <img class={styles.image} src="/public/unisa.png" />
+      )) ||
+        mark}
+    </h1>
+  );
 }
 
 export default ValidationMark;

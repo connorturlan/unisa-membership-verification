@@ -1,23 +1,23 @@
 .ValidationMark {
-	-webkit-user-select: none; /* Safari */
-	-ms-user-select: none; /* IE 10 and IE 11 */
-	user-select: none; /* Standard syntax */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 
-	color: #eee;
-	border-radius: 50%;
-	padding: 0em;
+  color: #fff;
+  border-radius: 50%;
+  padding: 0em;
 
-	height: 100px;
-	width: 100px;
+  height: 10rem;
+  width: 10rem;
 
-	margin: auto;
+  margin: auto;
 
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 }
