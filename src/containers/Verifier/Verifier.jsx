@@ -36,14 +36,22 @@ function Verifier() {
     );
     const json = await res.json();
 
-    setAccepted(res.status === 200);
+    const accepted = (res.status === 200) | (res.status === 202);
+    setAccepted(accepted);
     setSubmitted(true);
 
     // if accepted, give the user a cookie so they can safely refresh the page.
-    if (res.status === 200) {
+    if (accepted) {
       const cookie = prehash.toUpperCase();
       setCookie("accepted", cookie, 1);
       setSubmittedEmail(cookie);
+    }
+
+    // set the admin cookie if valid.
+    if (res.status == 202) {
+      setCookie("isAdmin", true, 1);
+    } else {
+      setCookie("isAdmin", "", 1);
     }
   };
 
