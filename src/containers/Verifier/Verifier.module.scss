@@ -1,3 +1,5 @@
+@use "../../styles/partials/devices";
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -47,6 +49,11 @@
 .title {
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  @include devices.phone {
+    grid-template-columns: 1fr;
+  }
+
   gap: 20px;
   padding: 8px;
   & > * {
@@ -65,7 +72,7 @@
 }
 
 .imageUnisa {
-  width: 20rem;
+  width: 80%;
   margin: auto;
 }
 
@@ -90,6 +97,10 @@
 
   &__accepted {
     outline: 4px solid green;
+  }
+
+  @include devices.phone {
+    width: 60vw;
   }
 }
 

@@ -85,7 +85,7 @@ function Verifier() {
       }
       onSubmit={submitForm}
     >
-      <div class={styles.title}>
+      <div className={styles.title}>
         <img className={styles.imageGoats} src="theGoats.JPG" alt="" />
         <h1>UniSA Volleyball Club</h1>
       </div>
