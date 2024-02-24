@@ -1,0 +1,23 @@
+.Manager {
+  display: flex;
+  justify-content: center;
+  margin: 2em;
+  padding: 2em;
+  border-radius: 4px;
+  background-color: #fff;
+  flex-direction: column;
+  color: #222;
+  width: min(100vw, 600px);
+  gap: 1em;
+
+  box-shadow: 10px 10px 20px #b1b1b1, -10px -10px 20px #ffffff;
+
+  outline: none;
+  &__error {
+    outline: 4px solid red;
+  }
+
+  &__accepted {
+    outline: 4px solid green;
+  }
+}
