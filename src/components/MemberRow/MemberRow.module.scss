@@ -1,0 +1,18 @@
+.MemberRow {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 40px;
+  border-bottom: 1px solid gray;
+  padding: 0 8px;
+}
+
+.Accepted {
+  color: green;
+}
+
+.Duplicate {
+  color: #ffd000;
+}
+
+.Error {
+  color: red;
+}
