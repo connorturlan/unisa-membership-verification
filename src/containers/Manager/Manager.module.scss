@@ -1,3 +1,5 @@
+@use "../../styles/partials/devices";
+
 .Manager {
   display: flex;
   justify-content: center;
@@ -12,13 +14,10 @@
 
   box-shadow: 10px 10px 20px #b1b1b1, -10px -10px 20px #ffffff;
 
-  outline: none;
-  &__error {
-    outline: 4px solid red;
-  }
+  outline: 4px solid #2f00ff;
 
-  &__accepted {
-    outline: 4px solid green;
+  @include devices.phone {
+    width: 400px;
   }
 }
 

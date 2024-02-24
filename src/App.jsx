@@ -14,8 +14,10 @@ function App() {
 
   return (
     <div className={styles.App}>
-      <Verifier />
-      {isAdmin && <Manager />};
+      <div className={styles.Container}>
+        <Verifier />
+        {isAdmin && <Manager />};
+      </div>
     </div>
   );
 }

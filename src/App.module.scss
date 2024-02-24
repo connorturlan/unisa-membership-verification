@@ -1,3 +1,5 @@
+@use "./styles/partials/devices";
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -45,6 +47,15 @@
 }
 
 .App {
+  background-image: url("/bgHorizontal.jpg");
+  @include devices.phone {
+    background-image: url("/bgVertical.jpg");
+  }
+
+  overflow-y: scroll;
+}
+
+.Container {
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -54,77 +65,8 @@
   padding: 0;
   margin: 0;
 
-  background-image: url("/bgHorizontal.jpg");
-}
-
-.title {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 8px;
-  & > * {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  @include devices.phone {
+    flex-direction: column;
+    justify-content: flex-start;
   }
-  & h1 {
-    font-size: 24pt;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  }
-}
-
-.imageGoats {
-  width: 10rem;
-}
-
-.imageUnisa {
-  width: 20rem;
-  margin: auto;
-}
-
-.entry {
-  display: flex;
-  justify-content: center;
-  margin: 2em;
-  padding: 2em;
-  border-radius: 4px;
-  background-color: #fff;
-  flex-direction: column;
-  color: #222;
-  width: min(100vw, 400px);
-  gap: 1em;
-
-  box-shadow: 10px 10px 20px #b1b1b1, -10px -10px 20px #ffffff;
-
-  outline: none;
-  &__rejected {
-    outline: 4px solid red;
-  }
-
-  &__accepted {
-    outline: 4px solid green;
-  }
-}
-
-.input {
-  padding: 5px;
-  border-radius: 4px;
-  width: 100%;
-
-  font-size: 14pt;
-}
-
-.inputbar {
-  display: grid;
-  width: 100%;
-
-  grid-template-columns: 1fr 6rem;
-  grid-column-gap: 8px;
-}
-
-.submittedEmail {
-  width: 100%;
-
-  display: flex;
-  justify-content: center;
 }
