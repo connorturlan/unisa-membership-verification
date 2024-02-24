@@ -96,6 +96,7 @@
 
   box-shadow: 10px 10px 20px #b1b1b1, -10px -10px 20px #ffffff;
 
+  outline: none;
   &__rejected {
     outline: 4px solid red;
   }
@@ -109,13 +110,15 @@
   padding: 5px;
   border-radius: 4px;
   width: 100%;
+
+  font-size: 14pt;
 }
 
 .inputbar {
   display: grid;
   width: 100%;
 
-  grid-template-columns: 1fr 4rem;
+  grid-template-columns: 1fr 6rem;
   grid-column-gap: 8px;
 }
 
