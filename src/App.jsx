@@ -69,7 +69,14 @@ function App() {
 
   return (
     <div className={styles.App}>
-      <form className={styles.entry} onSubmit={submitForm}>
+      <form
+        className={
+          styles.entry +
+          " " +
+          (isAccepted ? styles.entry__accepted : styles.entry__rejected)
+        }
+        onSubmit={submitForm}
+      >
         <div class={styles.title}>
           <img className={styles.imageGoats} src="theGoats.JPG" alt="" />
           <h1>UniSA Volleyball Club</h1>

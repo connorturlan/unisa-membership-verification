@@ -1,6 +1,16 @@
-.Rejected {}
+.shopitems {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 
-.shop-items {
-    display: flex;
-    justify-content: space-between;
+  & a {
+    font-size: 16pt;
+
+    // color: #26277c;
+    // &:visited {
+    //   color: #4244b1;
+    // }
+
+    text-decoration: underline;
+  }
 }
