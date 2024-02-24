@@ -60,60 +60,37 @@ function Manager(props) {
     // email = row['Email'].strip()
     // date = row['Club Group Expiry']
     // emailHash = hash_sha256(email)
-    const allPromises = members.map(async (row, i) => {
+    const memberPromises = members.map(async (row) => {
       let email = row["Email"];
       let date = row["Club Group Expiry"];
       let hash = await sha256(email);
-      console.log(email, hash);
-      // # post the data to the api, email only.
-      // print(email, ">", emailHash, end='\t')
-      // res = requests.post(
-      // 	"https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
-      // 	json={
-      // 		"auth": AUTH_TOKEN,
-      // 		"hash": emailHash,
-      // 		"date": date,
-      // 		"accessed": 0
-      // 	})
-      // print(res.status_code)
-      const body = JSON.stringify({
-        auth: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-        hash,
-        date,
-        accessed: 0,
-      });
-
-      return new Promise((res) =>
-        setTimeout(
-          async () =>
-            await fetch(
-              "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
-              {
-                method: "POST",
-                body,
-              }
-            )
-              .then((body) => {
-                console.log(body.status);
-                const newmembers = members.slice();
-                newmembers[i]["Status"] = body.status;
-                setMembers(newmembers);
-                res();
-              })
-              .catch((body) => {
-                console.log(body.status);
-                const newmembers = members.slice();
-                newmembers[i]["Status"] = "timeout";
-                setMembers(newmembers);
-                res();
-              }),
-          i * 100
-        )
-      );
+      return { hash, date };
     });
 
-    console.log("await...");
-    await Promise.all(allPromises);
+    const allMembers = await Promise.all(memberPromises);
+
+    const reqbody = JSON.stringify({
+      auth: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      members: allMembers,
+    });
+
+    const res = await fetch(
+      "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
+      {
+        method: "POST",
+        body: reqbody,
+      }
+    );
+
+    const resbody = await res.json();
+    console.log(resbody);
+
+    const newmembers = members.slice();
+    resbody.forEach((member, i) => {
+      newmembers[i]["Status"] = member.statusCode;
+    });
+    setMembers(newmembers);
+
     console.log("sent!");
     setSafety(true);
   };
