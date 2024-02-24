@@ -31,7 +31,7 @@ const sha256 = async (s) => {
 
 function Manager(props) {
   const [members, setMembers] = useState([]);
-  const [memberStatuses, setStatus] = useState([]);
+  const [enablePost, setSafety] = useState(true);
 
   const onFileUpload = (event) => {
     const reader = new FileReader();
@@ -53,6 +53,7 @@ function Manager(props) {
   };
 
   const postNewUsers = async () => {
+    setSafety(false);
     // # prehash = re.sub(r'\s+', "", ''.join(line.split(',')[:2]))
     // # name, email, date = (s.strip() for s in line.strip().split(','))
     // # userHash = hash_sha256(prehash)
@@ -82,27 +83,39 @@ function Manager(props) {
         accessed: 0,
       });
 
-      return setTimeout(
-        async () =>
-          await fetch(
-            "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
-            {
-              method: "POST",
-              body,
-            }
-          ).then((res) => {
-            console.log(res.status);
-            const newmembers = members.slice();
-            newmembers[i]["Status"] = res.status;
-            setMembers(newmembers);
-          }),
-        i * 100
+      return new Promise((res) =>
+        setTimeout(
+          async () =>
+            await fetch(
+              "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
+              {
+                method: "POST",
+                body,
+              }
+            )
+              .then((body) => {
+                console.log(body.status);
+                const newmembers = members.slice();
+                newmembers[i]["Status"] = body.status;
+                setMembers(newmembers);
+                res();
+              })
+              .catch((body) => {
+                console.log(body.status);
+                const newmembers = members.slice();
+                newmembers[i]["Status"] = "timeout";
+                setMembers(newmembers);
+                res();
+              }),
+          i * 100
+        )
       );
     });
 
     console.log("await...");
     await Promise.all(allPromises);
     console.log("sent!");
+    setSafety(true);
   };
 
   return (
@@ -126,7 +139,11 @@ function Manager(props) {
           />
         ))}
       </div>
-      <button onClick={postNewUsers}>Post Members</button>
+      {enablePost ? (
+        <button onClick={postNewUsers}>Post Members</button>
+      ) : (
+        <h3>Post Sent!</h3>
+      )}
     </div>
   );
 }
