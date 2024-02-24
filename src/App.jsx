@@ -71,11 +71,7 @@ function App() {
     <div className={styles.App}>
       <form className={styles.entry} onSubmit={submitForm}>
         <div class={styles.title}>
-          <img
-            className={styles.imageGoats}
-            src="/public/theGoats.JPG"
-            alt=""
-          />
+          <img className={styles.imageGoats} src="theGoats.JPG" alt="" />
           <h1>UniSA Volleyball Club</h1>
         </div>
         {!isAccepted && (
@@ -101,11 +97,7 @@ function App() {
             <b>{submittedEmail}</b>
           </p>
         )}
-        <img
-          className={styles.imageUnisa}
-          src="/public/unisaSport.png"
-          alt=""
-        />
+        <img className={styles.imageUnisa} src="unisaSport.png" alt="" />
         <h3>
           <a href="https://www.google.com">privacy</a>
         </h3>
