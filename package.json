@@ -15,7 +15,8 @@
 		"@grapecity/spread-excelio": "^17.0.3",
 		"gh-pages": "^5.0.0",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"react-dom": "^18.2.0",
+		"xlsx": "^0.18.5"
 	},
 	"devDependencies": {
 		"@types/react": "^18.0.26",

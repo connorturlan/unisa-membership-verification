@@ -1,32 +1,73 @@
+import { IO } from "@grapecity/spread-excelio";
 import styles from "./Manager.module.scss";
+
+const extractMemberData = (raw) => {
+  console.log(raw);
+  const sheets = raw.sheets;
+  const membersTable = sheets.Members;
+  const rawdata = membersTable.data.dataTable.map((row) => row.value);
+
+  console.log("1");
+  console.log(rawdata);
+
+  const titles = rawdata[0];
+  console.log(titles);
+  console.log("1.5");
+  const rows = rawdata.slice(1, rawdata.length() - 1);
+
+  console.log("2");
+  const data = rows.map((row) =>
+    titles.reduce((o, title, i) => {
+      o[title] = row[i];
+      return o;
+    }, {})
+  );
+
+  console.log(data);
+};
+
+const postNewUsers = (tableData) => {
+  // # prehash = re.sub(r'\s+', "", ''.join(line.split(',')[:2]))
+  // # name, email, date = (s.strip() for s in line.strip().split(','))
+  // # userHash = hash_sha256(prehash)
+  // email = row['Email'].strip()
+  // date = row['Club Group Expiry']
+  // emailHash = hash_sha256(email)
+  // # post the hash to the api, name + email.
+  // # print(prehash, ">", userHash, end='\t')
+  // # res = requests.post(
+  // #     "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
+  // #     json={
+  // #         "auth": AUTH_TOKEN,
+  // #         "hash": userHash,
+  // #         "date": date
+  // #     })
+  // # print(res.status_code)
+  // # post the data to the api, email only.
+  // print(email, ">", emailHash, end='\t')
+  // res = requests.post(
+  // 	"https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
+  // 	json={
+  // 		"auth": AUTH_TOKEN,
+  // 		"hash": emailHash,
+  // 		"date": date,
+  // 		"accessed": 0
+  // 	})
+  // print(res.status_code)
+};
 
 function Manager(props) {
   const onFileUpload = (event) => {
-    // Get The File From The Input
-    let file = event.target.files[0];
-    let filename = file.name;
-    // Create A File Reader HTML5
-    let reader = new FileReader();
-
-    // Ready The Event For When A File Gets Selected
-    reader.onload = function (e) {
-      let data = e.target.result;
-      let cfb = XLS.CFB.read(data, { type: "binary" });
-      let wb = XLS.parse_xlscfb(cfb);
-      // Loop Over Each Sheet
-      wb.SheetNames.forEach(function (sheetName) {
-        // Obtain The Current Row As CSV
-        let sCSV = XLS.utils.make_csv(wb.Sheets[sheetName]);
-        let oJS = XLS.utils.sheet_to_row_object_array(wb.Sheets[sheetName]);
-
-        document.getElementById("file-contents").innerText = filename;
-        document.getElementById("file-contents").innerHTML = sCSV;
-        console.log(oJS);
-      });
+    const excelIO = new IO();
+    const deserializationOptions = {
+      frozenRowsAsColumnHeaders: true,
     };
-
-    // Tell JS To Start Reading The File.. You could delay this if desired
-    reader.readAsBinaryString(file);
+    Array.from(event.target.files).forEach((file) =>
+      excelIO.open(file, (data) => {
+        console.log("done");
+        extractMemberData(data.sheet(0));
+      })
+    );
   };
 
   return (
