@@ -2,6 +2,8 @@ import * as XLSX from "xlsx";
 import styles from "./Manager.module.scss";
 import { useState } from "react";
 import MemberRow from "../../components/MemberRow/MemberRow";
+import { registerMembers } from "../../utils/database";
+import { sha256 } from "../../utils/utils";
 
 const extractMemberData = (raw) => {
   const allrows = raw.split("\n");
@@ -16,17 +18,6 @@ const extractMemberData = (raw) => {
   );
 
   return data;
-};
-
-const sha256 = async (s) => {
-  // same as: py -c "from hashlib import sha256; print(sha256(bytes('', 'utf8')).hexdigest())"
-  const msgBuffer = new TextEncoder().encode(s);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  return hashHex;
 };
 
 function Manager(props) {
@@ -46,7 +37,10 @@ function Manager(props) {
       /* Convert array of arrays */
       const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
       /* Update state */
-      const mdata = extractMemberData(data);
+      const mdata = extractMemberData(data).map((row) => {
+        row["Status"] = -1;
+        return row;
+      });
       setMembers(mdata);
     };
     reader.readAsBinaryString(event.target.files[0]);
@@ -54,12 +48,7 @@ function Manager(props) {
 
   const postNewUsers = async () => {
     setSafety(false);
-    // # prehash = re.sub(r'\s+', "", ''.join(line.split(',')[:2]))
-    // # name, email, date = (s.strip() for s in line.strip().split(','))
-    // # userHash = hash_sha256(prehash)
-    // email = row['Email'].strip()
-    // date = row['Club Group Expiry']
-    // emailHash = hash_sha256(email)
+
     const memberPromises = members.map(async (row) => {
       let email = row["Email"];
       let date = row["Club Group Expiry"];
@@ -69,27 +58,15 @@ function Manager(props) {
 
     const allMembers = await Promise.all(memberPromises);
 
-    const reqbody = JSON.stringify({
-      auth: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      members: allMembers,
-    });
-
-    const res = await fetch(
-      "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
-      {
-        method: "POST",
-        body: reqbody,
-      }
-    );
+    const res = await registerMembers(allMembers);
 
     const resbody = await res.json();
-    console.log(resbody);
 
-    const newmembers = members.slice();
+    const newMembers = members.slice();
     resbody.forEach((member, i) => {
-      newmembers[i]["Status"] = member.statusCode;
+      newMembers[i]["Status"] = member.statusCode;
     });
-    setMembers(newmembers);
+    setMembers(newMembers);
 
     console.log("sent!");
     setSafety(true);

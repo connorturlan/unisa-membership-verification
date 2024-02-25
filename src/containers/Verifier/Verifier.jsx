@@ -4,17 +4,8 @@ import styles from "./Verifier.module.scss";
 import Accepted from "../../components/Accepted/Accepted.jsx";
 import Rejected from "../../components/Rejected/Rejected.jsx";
 import { setCookie, getCookie } from "../../utils/cookies";
-
-const sha256 = async (s) => {
-  // same as: py -c "from hashlib import sha256; print(sha256(bytes('', 'utf8')).hexdigest())"
-  const msgBuffer = new TextEncoder().encode(s);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-  return hashHex;
-};
+import { verifyMember } from "../../utils/database.js";
+import { sha256 } from "../../utils/utils.js";
 
 function Verifier() {
   const [isSubmitted, setSubmitted] = useState(false);
@@ -25,16 +16,11 @@ function Verifier() {
   const pollDatabase = async (prehash) => {
     const hash = await sha256(prehash);
 
-    // console.log("polling: ", hash);
-
-    const res = await fetch(
-      "https://m7frrq2r75.execute-api.ap-southeast-2.amazonaws.com/Prod/validate",
-      {
-        method: "POST",
-        body: JSON.stringify({ hash }),
-      }
-    );
-    const json = await res.json();
+    const member = {
+      hash,
+      date: "",
+    };
+    const res = await verifyMember(member);
 
     const accepted = (res.status === 200) | (res.status === 202);
     setAccepted(accepted);
@@ -49,7 +35,7 @@ function Verifier() {
 
     // set the admin cookie if valid.
     if (res.status == 202) {
-      setCookie("isAdmin", true, 1);
+      setCookie("isAdmin", prehash, 1);
     } else {
       setCookie("isAdmin", "", 1);
     }
@@ -58,10 +44,9 @@ function Verifier() {
   const submitForm = (e) => {
     e.preventDefault();
 
-    const name = ""; //e.target.name.value;
     const email = e.target.email.value;
+    const prehash = email.toLowerCase().replace(/\s/g, "");
 
-    const prehash = (name + email).toLowerCase().replace(/\s/g, "");
     pollDatabase(prehash);
   };
 
