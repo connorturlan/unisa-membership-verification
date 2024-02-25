@@ -89,12 +89,13 @@ function Verifier() {
           </div>
         </>
       )}
-      {isSubmitted && ((isAccepted && <Accepted />) || <Rejected />)}
-      {isSubmitted && isAccepted && (
+      {isSubmitted && (isAccepted ? <Accepted /> : <Rejected />)}
+      {(isSubmitted && isAccepted && (
         <p className={styles.submittedEmail}>
           <b>{submittedEmail}</b>
         </p>
-      )}
+      )) ||
+        ""}
       <img className={styles.imageUnisa} src="unisaSport.png" alt="" />
     </form>
   );
