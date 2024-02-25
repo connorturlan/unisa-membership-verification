@@ -18,9 +18,7 @@ function ValidationMark({ mark, colour, enabled }) {
 
   return (
     <h1 style={style} className={styles.ValidationMark} onClick={changeColour}>
-      {(colourIndex == colourList.length - 1 && (
-        <img class={styles.image} src="unisa.png" />
-      )) ||
+      {(colourIndex == colourList.length - 1 && <img src="unisa.png" />) ||
         mark}
     </h1>
   );

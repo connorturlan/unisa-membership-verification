@@ -59,9 +59,13 @@ function Manager(props) {
     const hash = await sha256(prehash);
     const date = datetime.toISOString();
     const member = { hash, date };
-    // console.log(member);
 
-    await registerMembers([member]);
+    const res = await registerMembers([member]);
+    const resbody = await res.json();
+
+    if (resbody[0] == 2) {
+      window.alert("User already exists in database.");
+    }
 
     setSingleSubmit(true);
   };
@@ -95,7 +99,7 @@ function Manager(props) {
   return (
     <div className={styles.Manager}>
       <h1>Member Manager</h1>
-      <h2>Add New Member</h2>
+      <h2>Add New Endorsed Member</h2>
       <form className={styles.entryArea} onSubmit={postNewUser}>
         <input
           className={styles.input}
