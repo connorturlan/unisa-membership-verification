@@ -50,7 +50,7 @@ function Manager(props) {
 
   const postNewUser = async (e) => {
     e.preventDefault();
-    // setSingleSubmit(false);
+    setSingleSubmit(false);
 
     const email = e.target.email.value;
     const prehash = email.toLowerCase().replace(/\s/g, "");
