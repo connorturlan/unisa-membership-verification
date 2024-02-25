@@ -25,3 +25,25 @@
   height: 200px;
   overflow-y: auto;
 }
+
+.entryArea {
+  display: grid;
+  width: 100%;
+
+  grid-template-columns: 1fr 6rem;
+  grid-column-gap: 8px;
+
+  & * {
+    padding: 4px;
+  }
+}
+
+.buttonArea {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+
+  & > button {
+    width: 100%;
+  }
+}

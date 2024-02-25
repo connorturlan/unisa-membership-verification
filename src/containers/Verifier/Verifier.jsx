@@ -96,9 +96,6 @@ function Verifier() {
         </p>
       )}
       <img className={styles.imageUnisa} src="unisaSport.png" alt="" />
-      <h3>
-        <a href="https://www.google.com">privacy</a>
-      </h3>
     </form>
   );
 }

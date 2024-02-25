@@ -4,6 +4,7 @@ import { useState } from "react";
 import MemberRow from "../../components/MemberRow/MemberRow";
 import { registerMembers } from "../../utils/database";
 import { sha256 } from "../../utils/utils";
+import { CircleLoader } from "react-spinners";
 
 const extractMemberData = (raw) => {
   const allrows = raw.split("\n");
@@ -22,7 +23,8 @@ const extractMemberData = (raw) => {
 
 function Manager(props) {
   const [members, setMembers] = useState([]);
-  const [enablePost, setSafety] = useState(true);
+  const [showSingleSubmit, setSingleSubmit] = useState(true);
+  const [showBulkSubmit, setBulkSubmit] = useState(true);
 
   const onFileUpload = (event) => {
     const reader = new FileReader();
@@ -46,8 +48,26 @@ function Manager(props) {
     reader.readAsBinaryString(event.target.files[0]);
   };
 
+  const postNewUser = async (e) => {
+    e.preventDefault();
+    // setSingleSubmit(false);
+
+    const email = e.target.email.value;
+    const prehash = email.toLowerCase().replace(/\s/g, "");
+    const datetime = new Date();
+    datetime.setDate(datetime.getDate() + 1);
+    const hash = await sha256(prehash);
+    const date = datetime.toISOString();
+    const member = { hash, date };
+    // console.log(member);
+
+    await registerMembers([member]);
+
+    setSingleSubmit(true);
+  };
+
   const postNewUsers = async () => {
-    setSafety(false);
+    setBulkSubmit(false);
 
     const memberPromises = members.map(async (row) => {
       let email = row["Email"];
@@ -69,18 +89,34 @@ function Manager(props) {
     setMembers(newMembers);
 
     console.log("sent!");
-    setSafety(true);
+    setBulkSubmit(true);
   };
 
   return (
     <div className={styles.Manager}>
       <h1>Member Manager</h1>
-      <h2>Upload Member Details</h2>
+      <h2>Add New Member</h2>
+      <form className={styles.entryArea} onSubmit={postNewUser}>
+        <input
+          className={styles.input}
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email Address"
+        />
+        {showSingleSubmit ? (
+          <input className={styles.input} type="submit" value="submit" />
+        ) : (
+          <CircleLoader size={20} color="blue" />
+        )}
+      </form>
+      <h2>Bulk Upload Member Details</h2>
       <input
         id="file-upload"
         className={styles.fileupload}
         type="file"
         onChange={onFileUpload}
+        text={"select exported member details"}
       />
       <div className={styles.filepreview} id="file-contents">
         <MemberRow email={"Email"} date={"Expiry"} status={"Status"} />
@@ -93,11 +129,13 @@ function Manager(props) {
           />
         ))}
       </div>
-      {enablePost ? (
-        <button onClick={postNewUsers}>Post Members</button>
-      ) : (
-        <h3>Post Sent!</h3>
-      )}
+      <div className={styles.buttonArea}>
+        {showBulkSubmit ? (
+          <button onClick={postNewUsers}>Post Members</button>
+        ) : (
+          <CircleLoader size={40} color="blue" />
+        )}
+      </div>
     </div>
   );
 }
