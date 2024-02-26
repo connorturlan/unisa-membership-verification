@@ -6,16 +6,17 @@ import Verifier from "./containers/Verifier/Verifier.jsx";
 import { getCookie } from "./utils/cookies.js";
 
 function App() {
-  const [isAdmin, setAdmin] = useState(false);
+  const [isAdmin, setAdmin] = useState(!!getCookie("isAdmin"));
 
-  useEffect(() => {
+  const onResponse = (e) => {
+    console.log("response recieved.");
     setAdmin(!!getCookie("isAdmin"));
-  }, []);
+  };
 
   return (
     <div className={styles.App}>
       <div className={styles.Container}>
-        <Verifier />
+        <Verifier onResponse={onResponse} />
         {isAdmin && <Manager />};
       </div>
     </div>

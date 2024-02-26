@@ -6,10 +6,12 @@ import Rejected from "../../components/Rejected/Rejected.jsx";
 import { setCookie, getCookie } from "../../utils/cookies";
 import { verifyMember } from "../../utils/database.js";
 import { sha256 } from "../../utils/utils.js";
+import { CircleLoader } from "react-spinners";
 
-function Verifier() {
+function Verifier({ onSubmit, onResponse }) {
   const [isSubmitted, setSubmitted] = useState(false);
   const [isAccepted, setAccepted] = useState(false);
+  const [showSpinner, setSpinner] = useState(false);
 
   const [submittedEmail, setSubmittedEmail] = useState("");
 
@@ -36,13 +38,16 @@ function Verifier() {
     // set the admin cookie if valid.
     if (res.status == 202) {
       setCookie("isAdmin", prehash, 1);
-    } else {
-      setCookie("isAdmin", "", 1);
     }
+
+    setSpinner(false);
+    onResponse && onResponse();
   };
 
   const submitForm = (e) => {
     e.preventDefault();
+    setSpinner(true);
+    onSubmit && onSubmit();
 
     const email = e.target.email.value;
     const prehash = email.toLowerCase().replace(/\s/g, "");
@@ -85,7 +90,11 @@ function Verifier() {
               id="email"
               placeholder="Email Address"
             />
-            <input className={styles.input} type="submit" value="submit" />
+            {showSpinner ? (
+              <CircleLoader size="34" color="blue" />
+            ) : (
+              <input className={styles.input} type="submit" value="submit" />
+            )}
           </div>
         </>
       )}

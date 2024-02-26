@@ -5,6 +5,7 @@ import MemberRow from "../../components/MemberRow/MemberRow";
 import { registerMembers } from "../../utils/database";
 import { sha256 } from "../../utils/utils";
 import { CircleLoader } from "react-spinners";
+import { setCookie } from "../../utils/cookies";
 
 const extractMemberData = (raw) => {
   const allrows = raw.split("\n");
@@ -96,9 +97,18 @@ function Manager(props) {
     setBulkSubmit(true);
   };
 
+  const clearCookies = () => {
+    setCookie("accepted", "");
+    setCookie("isAdmin", "");
+    location.reload(true);
+  };
+
   return (
     <div className={styles.Manager}>
       <h1>Member Manager</h1>
+      <div className={styles.buttonArea}>
+        <button onClick={clearCookies}>Reset Login</button>
+      </div>
       <h2>Add New Endorsed Member</h2>
       <form className={styles.entryArea} onSubmit={postNewUser}>
         <input
