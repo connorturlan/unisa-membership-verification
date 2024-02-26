@@ -17,7 +17,7 @@ function App() {
     <div className={styles.App}>
       <div className={styles.Container}>
         <Verifier onResponse={onResponse} />
-        {isAdmin && <Manager />};
+        {isAdmin && <Manager />}
       </div>
     </div>
   );

@@ -76,7 +76,9 @@ function Verifier({ onSubmit, onResponse }) {
       onSubmit={submitForm}
     >
       <div className={styles.title}>
-        <img className={styles.imageGoats} src="theGoats.JPG" alt="" />
+        <div className={styles.imageContainer}>
+          <img className={styles.imageGoats} src="goatsIcon.jpg" alt="" />
+        </div>
         <h1>UniSA Volleyball Club</h1>
       </div>
       {!isAccepted && (
