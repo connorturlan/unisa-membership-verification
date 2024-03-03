@@ -47,7 +47,7 @@ function Verifier({ onSubmit, onResponse }) {
   const submitForm = (e) => {
     e.preventDefault();
     setSpinner(true);
-    setTimeout(() => setSpinner(false), 5000);
+    setTimeout(() => setSpinner(false), 3000);
     onSubmit && onSubmit();
 
     const email = e.target.email.value;

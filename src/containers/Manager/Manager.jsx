@@ -7,17 +7,22 @@ import { sha256 } from "../../utils/utils";
 import { CircleLoader } from "react-spinners";
 import { setCookie } from "../../utils/cookies";
 
-const extractMemberData = (raw) => {
-  const allrows = raw.split("\n");
-  const titles = allrows[0].split(",");
-  const rows = allrows.slice(1);
+const FS = "~";
+const RS = "\n";
 
-  const data = rows.map((rowdata) =>
-    titles.reduce((row, title, index) => {
-      row[title] = rowdata.split(",")[index];
-      return row;
-    }, {})
-  );
+const extractMemberDataFromCSV = (rawtable) => {
+  const raw = rawtable.split(RS);
+
+  const title = raw[0].split(FS);
+  const rows = raw.slice(1);
+
+  const data = rows.map((rowstring) => {
+    const row = rowstring.split(FS);
+    return row.reduce((cell, col, index) => {
+      cell[title[index]] = col;
+      return cell;
+    }, {});
+  });
 
   return data;
 };
@@ -27,26 +32,25 @@ function Manager(props) {
   const [showSingleSubmit, setSingleSubmit] = useState(true);
   const [showBulkSubmit, setBulkSubmit] = useState(true);
 
-  const onFileUpload = (event) => {
+  const onMembersUpload = (event) => {
+    event.preventDefault();
+
+    const files = event.target.files;
+    const f = files[0];
+
     const reader = new FileReader();
-    reader.onload = (evt) => {
-      // evt = on_file_select event
-      /* Parse data */
-      const bstr = evt.target.result;
-      const wb = XLSX.read(bstr, { type: "binary" });
-      /* Get first worksheet */
-      const wsname = wb.SheetNames[0];
-      const ws = wb.Sheets[wsname];
-      /* Convert array of arrays */
-      const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-      /* Update state */
-      const mdata = extractMemberData(data).map((row) => {
-        row["Status"] = -1;
-        return row;
-      });
-      setMembers(mdata);
+    reader.onload = (e) => {
+      const data = e.target.result;
+      let readData = XLSX.read(data, { type: "binary" });
+      const wsname = readData.SheetNames[0];
+      const ws = readData.Sheets[wsname];
+
+      const dataRaw = XLSX.utils.sheet_to_csv(ws, { header: 1, FS, RS });
+      const dataParse = extractMemberDataFromCSV(dataRaw);
+      setMembers(dataParse);
     };
-    reader.readAsBinaryString(event.target.files[0]);
+
+    reader.readAsBinaryString(f);
   };
 
   const postNewUser = async (e) => {
@@ -121,7 +125,7 @@ function Manager(props) {
         {showSingleSubmit ? (
           <input className={styles.input} type="submit" value="submit" />
         ) : (
-          <CircleLoader size={20} color="blue" />
+          <CircleLoader size="20px" color="blue" />
         )}
       </form>
       <h2>Bulk Upload Member Details</h2>
@@ -129,7 +133,7 @@ function Manager(props) {
         id="file-upload"
         className={styles.fileupload}
         type="file"
-        onChange={onFileUpload}
+        onChange={onMembersUpload}
         text={"select exported member details"}
       />
       <div className={styles.filepreview} id="file-contents">
@@ -147,7 +151,7 @@ function Manager(props) {
         {showBulkSubmit ? (
           <button onClick={postNewUsers}>Post Members</button>
         ) : (
-          <CircleLoader size={40} color="blue" />
+          <CircleLoader size="40px" color="blue" />
         )}
       </div>
     </div>
