@@ -85,6 +85,14 @@ function Verifier({ onSubmit, onResponse }) {
       {!isAccepted && (
         <>
           <h2>Please enter the following details to verify your membership.</h2>
+          <div className={styles.storeLink}>
+            <a
+              href="https://www.unisasport.edu.au/Clubs/Volleyball/Groups"
+              target="_blank"
+            >
+              Purchase Membership Here
+            </a>
+          </div>
           <div className={styles.inputbar}>
             <input
               className={styles.input}
