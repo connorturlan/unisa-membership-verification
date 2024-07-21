@@ -27,6 +27,7 @@ const extractMemberDataFromCSV = (rawtable) => {
   return data;
 };
 
+// Manager is the management console used by admins to add and update members.
 function Manager(props) {
   const [members, setMembers] = useState([]);
   const [showSingleSubmit, setSingleSubmit] = useState(true);
