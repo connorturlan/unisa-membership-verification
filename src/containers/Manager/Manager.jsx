@@ -33,6 +33,7 @@ function Manager(props) {
   const [showSingleSubmit, setSingleSubmit] = useState(true);
   const [showBulkSubmit, setBulkSubmit] = useState(true);
 
+  // onMembersUpload
   const onMembersUpload = (event) => {
     event.preventDefault();
 
