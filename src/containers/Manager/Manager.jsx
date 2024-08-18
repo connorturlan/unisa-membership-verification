@@ -32,7 +32,8 @@ function Manager(props) {
   const [members, setMembers] = useState([]);
   const [showSingleSubmit, setSingleSubmit] = useState(true);
   const [showBulkSubmit, setBulkSubmit] = useState(true);
-
+  const [adminIsValid, setAdminIsValid] = useState(false);
+  
   const onMembersUpload = (event) => {
     event.preventDefault();
 
@@ -108,20 +109,72 @@ function Manager(props) {
     location.reload(true);
   };
 
+  const validate = () => {
+    //should be adjusted to check the password of the admin
+    setAdminIsValid(true)
+  };
+
+  if (adminIsValid){
+    return (
+      <div className={styles.Manager}>
+        <h1>Member Manager</h1>
+        <div className={styles.buttonArea}>
+          <button onClick={clearCookies}>Reset Login</button>
+        </div>
+        <h2>Add New Endorsed Member</h2>
+        <form className={styles.entryArea} onSubmit={postNewUser}>
+          <input
+            className={styles.input}
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Email Address"
+          />
+          {showSingleSubmit ? (
+            <input className={styles.input} type="submit" value="submit" />
+          ) : (
+            <CircleLoader size="20px" color="blue" />
+          )}
+        </form>
+        <h2>Bulk Upload Member Details</h2>
+        <input
+          id="file-upload"
+          className={styles.fileupload}
+          type="file"
+          onChange={onMembersUpload}
+          text={"select exported member details"}
+        />
+        <div className={styles.filepreview} id="file-contents">
+          <MemberRow email={"Email"} date={"Expiry"} status={"Status"} />
+          {members.map((row, i) => (
+            <MemberRow
+              key={row["Email"]}
+              email={row["Email"]}
+              date={row["Club Group Expiry"]}
+              status={row["Status"] || "wait"}
+            />
+          ))}
+        </div>
+        <div className={styles.buttonArea}>
+          {showBulkSubmit ? (
+            <button onClick={postNewUsers}>Post Members</button>
+          ) : (
+            <CircleLoader size="40px" color="blue" />
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.Manager}>
-      <h1>Member Manager</h1>
-      <div className={styles.buttonArea}>
-        <button onClick={clearCookies}>Reset Login</button>
-      </div>
-      <h2>Add New Endorsed Member</h2>
-      <form className={styles.entryArea} onSubmit={postNewUser}>
+      <form className={styles.entryArea} onSubmit={validate}>
         <input
           className={styles.input}
-          type="email"
-          name="email"
-          id="email"
-          placeholder="Email Address"
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Enter Password"
         />
         {showSingleSubmit ? (
           <input className={styles.input} type="submit" value="submit" />
@@ -129,34 +182,9 @@ function Manager(props) {
           <CircleLoader size="20px" color="blue" />
         )}
       </form>
-      <h2>Bulk Upload Member Details</h2>
-      <input
-        id="file-upload"
-        className={styles.fileupload}
-        type="file"
-        onChange={onMembersUpload}
-        text={"select exported member details"}
-      />
-      <div className={styles.filepreview} id="file-contents">
-        <MemberRow email={"Email"} date={"Expiry"} status={"Status"} />
-        {members.map((row, i) => (
-          <MemberRow
-            key={row["Email"]}
-            email={row["Email"]}
-            date={row["Club Group Expiry"]}
-            status={row["Status"] || "wait"}
-          />
-        ))}
-      </div>
-      <div className={styles.buttonArea}>
-        {showBulkSubmit ? (
-          <button onClick={postNewUsers}>Post Members</button>
-        ) : (
-          <CircleLoader size="40px" color="blue" />
-        )}
-      </div>
     </div>
   );
+
 }
 
 export default Manager;
