@@ -28,3 +28,5 @@ CC by attribution, commercial, derivatives allowed.
 ## Contributions
 
 Made by Connor Turlan 2023.
+
+Daniel Contributed to nothing so far :)
